@@ -564,6 +564,7 @@ class Exaone4_5_ForConditionalGeneration(nn.Module):
 
     packed_modules_mapping = {
         "gate_up_proj": ["gate_proj", "up_proj"],
+        "qkv_proj": ["q_proj", "k_proj", "v_proj"],
     }
     # To ensure correct weight loading and mapping.
     hf_to_sglang_mapper = WeightsMapper(
@@ -572,7 +573,7 @@ class Exaone4_5_ForConditionalGeneration(nn.Module):
         },
         orig_to_new_prefix={
             # mapping for new names in checkpoint saved after transformers v4.52
-            "model.language_model.": "language_model.model.",
+            "model.language_model.": "model.",
             "model.visual.": "visual.",
             # mapping for original checkpoint
             "lm_head.": "language_model.lm_head.",
