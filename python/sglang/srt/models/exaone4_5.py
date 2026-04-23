@@ -595,7 +595,7 @@ class Exaone4_5_ForConditionalGeneration(nn.Module):
 
         if not self.config.encoder_only:
             self.model = Exaone4Model(
-                config,
+                config.text_config,
                 quant_config,
                 prefix=add_prefix("model", prefix),
             )
@@ -795,7 +795,14 @@ class Exaone4_5_ForConditionalGeneration(nn.Module):
         for name, loaded_weight in weights:
             if is_mtp:
                 if name.startswith("mtp."):
-                    name = name.replace("mtp.", "model.")
+                    if name in [
+                        "mtp.fc.weight",
+                        "mtp.pre_fc_norm_embedding.weight",
+                        "mtp.pre_fc_norm_hidden.weight",
+                    ]:
+                        name = name.replace("mtp.", "")
+                    else:
+                        name = name.replace("mtp.", "model.")
                 elif any(key in name for key in ["embed_tokens", "lm_head"]):
                     if "embed_tokens" in name:
                         name = name.replace("language_model.", "")
